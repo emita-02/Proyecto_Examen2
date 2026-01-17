@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 
 @Getter @Setter
 @AllArgsConstructor
@@ -26,14 +25,14 @@ public class Producto {
      * Evita valores nulos o vacios
      * Define el tamaño del texto (Varchar en MySQL)
      */
-    @NotBlank(message = "Ingresar el nombre es obligatorio.")
+    @NotBlank(message = "Ingresar el nombre.")
     @Size(min = 3, max = 50, message = "El nombre debe tener entre 3 y 50 caracteres.")
     private String nombre;
 
     /**
      * Campo opcional con limite de carateres
      */
-    @Size(max = 150, message = "La descipción no puede ser mas de 150 caracteres.")
+    @Size(max = 150, message = "La descipción no puede tener más de 150 caracteres.")
     private String descripcion;
 
     /**

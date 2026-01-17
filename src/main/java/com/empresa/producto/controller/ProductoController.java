@@ -33,13 +33,7 @@ public class ProductoController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Producto> obtenerProductoID(@PathVariable Long id){
-        Producto producto = productoService.obtenerPorId(id);
-
-        if (producto == null){
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(producto);
+        return ResponseEntity.ok(productoService.obtenerPorId(id));
     }
 
     /**
@@ -59,13 +53,7 @@ public class ProductoController {
      */
     @PutMapping("{id}")
     public ResponseEntity<Producto> actualizarProducto(@PathVariable Long id, @Valid @RequestBody Producto producto){
-        Producto productoActualizado = productoService.actualizar(id, producto);
-
-        if (productoActualizado == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(productoActualizado);
+        return ResponseEntity.ok(productoService.actualizar(id, producto));
     }
 
     /**
@@ -74,13 +62,8 @@ public class ProductoController {
      */
     @DeleteMapping("{id}")
     public ResponseEntity<Void> eliminarProducto(@PathVariable Long id){
-        Producto productoEliminado = productoService.obtenerPorId(id);
-
-        if (productoEliminado == null){
-            return ResponseEntity.notFound().build();
-        }
-
         productoService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
+
 }
