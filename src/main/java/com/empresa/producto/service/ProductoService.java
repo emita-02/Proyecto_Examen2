@@ -1,5 +1,6 @@
 package com.empresa.producto.service;
 
+
 import com.empresa.producto.model.Producto;
 import com.empresa.producto.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,26 +11,23 @@ import java.util.Optional;
 
 @Service
 public class ProductoService {
+
     @Autowired
     private ProductoRepository productoRepository;
 
-    // Obtener todos los productos
     public List<Producto> listarTodos() {
         return productoRepository.findAll();
     }
 
-    // Obtener producto por id
     public Producto obtenerPorId(Long id) {
         Optional<Producto> producto = productoRepository.findById(id);
         return producto.orElse(null);
     }
 
-    // Crear un nuevo producto
     public Producto guardar(Producto producto) {
         return productoRepository.save(producto);
     }
 
-    // Actualizar un producto existente
     public Producto actualizar(Long id, Producto productoActualizado) {
         Producto productoExistente = obtenerPorId(id);
 
@@ -46,9 +44,8 @@ public class ProductoService {
         return null;
     }
 
-    // Eliminar producto
     public void eliminar(Long id) {
         productoRepository.deleteById(id);
     }
-
 }
+
