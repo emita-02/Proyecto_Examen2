@@ -1,10 +1,7 @@
 package com.empresa.producto.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Getter @Setter
@@ -40,7 +37,7 @@ public class Producto {
      * Evita que el precio sea negativo
      */
     @NotNull(message = "Debe ingresar el precio del producto.")
-    @Min(value = 1, message = "El precio no puede ser 0, ni negativo.")
+    @DecimalMin(value = "0.01", message = "El precio no puede ser 0, ni negativo.")
     private Double precio;
 
     /**
