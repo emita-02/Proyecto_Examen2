@@ -42,7 +42,7 @@ public class ProductoController {
      */
     @PostMapping
     public ResponseEntity<Producto> crearProducto(@Valid @RequestBody Producto producto){
-        Producto nuevoProducto = productoService.guardar(producto);
+        Producto nuevoProducto = productoService.guardarProducto(producto);
 
         return new ResponseEntity<>(nuevoProducto, HttpStatus.CREATED);
     }
@@ -53,7 +53,7 @@ public class ProductoController {
      */
     @PutMapping("{id}")
     public ResponseEntity<Producto> actualizarProducto(@PathVariable Long id, @Valid @RequestBody Producto producto){
-        return ResponseEntity.ok(productoService.actualizar(id, producto));
+        return ResponseEntity.ok(productoService.actualizarProducto(id, producto));
     }
 
     /**
@@ -62,7 +62,7 @@ public class ProductoController {
      */
     @DeleteMapping("{id}")
     public ResponseEntity<Void> eliminarProducto(@PathVariable Long id){
-        productoService.eliminar(id);
+        productoService.eliminarPrducto(id);
         return ResponseEntity.noContent().build();
     }
 
