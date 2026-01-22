@@ -37,8 +37,10 @@
 <div class="container">
     <div class="row">
 
-        <!-- FORMULARIO -->
+        <!-- ================= COLUMNA IZQUIERDA ================= -->
         <div class="col-md-4">
+
+            <!-- FORMULARIO -->
             <div class="card">
                 <div class="card-header bg-success text-white">
                     <h5 id="formTitle">
@@ -85,9 +87,30 @@
                     </form>
                 </div>
             </div>
+
+            <!-- 🔍 BUSCAR PRODUCTO POR ID -->
+            <div class="card mt-3">
+                <div class="card-header bg-secondary text-white">
+                    <h6 class="mb-0">
+                        <i class="bi bi-search"></i> Buscar Producto por ID
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <input type="number" class="form-control" id="buscarId" placeholder="Ingrese el ID">
+                        <button class="btn btn-dark" onclick="buscarProducto()">
+                            Buscar
+                        </button>
+                    </div>
+                    <button class="btn btn-link mt-2 p-0" onclick="loadProductos()">
+                        Ver todos los productos
+                    </button>
+                </div>
+            </div>
+
         </div>
 
-        <!-- TABLA -->
+        <!-- ================= COLUMNA DERECHA ================= -->
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header bg-primary text-white d-flex justify-content-between">
@@ -132,43 +155,68 @@
     document.addEventListener('DOMContentLoaded', loadProductos);
 
     async function loadProductos() {
-        try{
-            const res = await fetch(API_URL);
-            if (!res.ok) {
-                alert('Error al cargar los productos');
-                return;
-            }
+        const res = await fetch(API_URL);
+        const data = await res.json();
 
-            const data = await res.json();
-            const tbody = document.getElementById('productosTable');
-            tbody.innerHTML = '';
+        const tbody = document.getElementById('productosTable');
+        tbody.innerHTML = '';
 
-            data.forEach(p => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${p.id}</td>
-                        <td>${p.nombre}</td>
-                        <td>${p.descripcion}</td>
-                        <td>$${p.precio}</td>
-                        <td>${p.stock}</td>
-                        <td>${p.categoria}</td>
-                        <td>
-                            <button class="btn btn-warning btn-sm" onclick="editProducto(${p.id})">
-                                <i class="bi bi-pencil"></i>
-                            </button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteProducto(${p.id})">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
+        data.forEach(p => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${p.id}</td>
+                    <td>${p.nombre}</td>
+                    <td>${p.descripcion}</td>
+                    <td>$${p.precio}</td>
+                    <td>${p.stock}</td>
+                    <td>${p.categoria}</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="editProducto(${p.id})">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteProducto(${p.id})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
 
-            document.getElementById('total').textContent = data.length;
-        } catch(error){
-            alert('No se puede conectar con la API');
-            console.error(error);
-        }
+        document.getElementById('total').textContent = data.length;
+    }
+
+    // 🔍 BUSCAR POR ID
+    async function buscarProducto() {
+        const id = document.getElementById('buscarId').value;
+        if (!id) return alert('Ingrese un ID');
+
+        const res = await fetch(`${API_URL}/${id}`);
+        if (!res.ok) return alert('Producto no encontrado');
+
+        const p = await res.json();
+        const tbody = document.getElementById('productosTable');
+
+        tbody.innerHTML = `
+            <tr>
+                <td>${p.id}</td>
+                <td>${p.nombre}</td>
+                <td>${p.descripcion}</td>
+                <td>$${p.precio}</td>
+                <td>${p.stock}</td>
+                <td>${p.categoria}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" onclick="editProducto(${p.id})">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteProducto(${p.id})">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+
+        document.getElementById('total').textContent = 1;
+        document.getElementById('buscarId').value = '';
     }
 
     async function editProducto(id) {
@@ -188,48 +236,13 @@
     }
 
     async function deleteProducto(id) {
-        //Confirmación para eliminar un producto
-        const confirmacion = confirm('¿Desea eliminar este producto?');
-
-        if (!confirmacion) return;
-        const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-
-        if(!response.ok){
-            alert('Error al eliminar el producto');
-            return;
-        }
-
+        if (!confirm('¿Eliminar producto?')) return;
+        await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
         loadProductos();
     }
 
     productForm.addEventListener('submit', async e => {
         e.preventDefault();
-
-        //Validaciones
-        if (!nombre.value.trim()){
-            alert('Debe colocar el nombre');
-            return;
-        }
-
-        if (!descripcion.value.trim()) {
-        alert('La descripción es obligatoria');
-        return;
-        }
-
-        if (precio.value <= 0) {
-            alert('El precio no puede ser negativo o 0');
-            return;
-        }
-
-        if (stock.value < 0) {
-            alert('El stock no puede ser negativo');
-            return;
-        }
-
-        if (!categoria.value.trim()) {
-            alert('Debe eligir una categoria');
-            return;
-        }
 
         const producto = {
             nombre: nombre.value,
@@ -241,16 +254,13 @@
 
         const id = productoId.value;
 
-        await fetch(id ? `${API_URL}/${id}` : API_URL, {
+        const response = await fetch(id ? `${API_URL}/${id}` : API_URL, {
             method: id ? 'PUT' : 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(producto)
         });
 
-        if (!response.ok) {
-            alert('Ocurrió un error al guardar el producto');
-            return;
-        }
+        if (!response.ok) return alert('Error al guardar');
 
         resetForm();
         loadProductos();
