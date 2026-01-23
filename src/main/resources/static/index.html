@@ -40,8 +40,29 @@
         <!-- ================= COLUMNA IZQUIERDA ================= -->
         <div class="col-md-4">
 
-            <!-- FORMULARIO -->
+            <!-- BUSCAR PRODUCTO POR ID -->
             <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h6 class="mb-0">
+                        <i class="bi bi-search"></i> Buscar Producto por ID o Nombre
+                    </h6>
+                </div>
+
+                <div class="card-body">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="buscarId" placeholder="Ingrese el ID o Nombre">
+                        <button class="btn btn-dark" onclick="buscarProducto()">
+                            Buscar
+                        </button>
+                    </div>
+                    <button class="btn btn-link mt-2 p-0" onclick="loadProductos()">
+                        Ver todos los productos
+                    </button>
+                </div>
+            </div>
+
+            <!-- FORMULARIO -->
+            <div class="card mt-3">
                 <div class="card-header bg-success text-white">
                     <h5 id="formTitle">
                         <i class="bi bi-plus-circle"></i> Nuevo Producto
@@ -87,27 +108,6 @@
                     </form>
                 </div>
             </div>
-
-            <!-- BUSCAR PRODUCTO POR ID -->
-            <div class="card mt-3">
-                <div class="card-header bg-secondary text-white">
-                    <h6 class="mb-0">
-                        <i class="bi bi-search"></i> Buscar Producto por ID o Nombre
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="buscarId" placeholder="Ingrese el ID o Nombre">
-                        <button class="btn btn-dark" onclick="buscarProducto()">
-                            Buscar
-                        </button>
-                    </div>
-                    <button class="btn btn-link mt-2 p-0" onclick="loadProductos()">
-                        Ver todos los productos
-                    </button>
-                </div>
-            </div>
-
         </div>
 
         <!-- ================= COLUMNA DERECHA ================= -->
