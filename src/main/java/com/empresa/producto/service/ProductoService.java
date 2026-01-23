@@ -1,6 +1,8 @@
 package com.empresa.producto.service;
 
+import com.empresa.producto.dto.ProductoDTO;
 import com.empresa.producto.exception.ResourceNotFoundException;
+import com.empresa.producto.mapper.ProductoMapper;
 import com.empresa.producto.model.Producto;
 import com.empresa.producto.repository.IProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,26 +21,35 @@ public class ProductoService implements IProductoService{
 
     // Obtener todos los productos
     @Override
-    public List<Producto> listarTodos() {
-        return productoRepository.findAll();
+    public List<ProductoDTO> listarTodos() {
+        return productoRepository.findAll().stream()
+                .map(ProductoMapper::toDTO)
+                .toList();
     }
 
     // Obtener producto por id
     @Override
-    public Producto obtenerPorId(Long id) {
-        return productoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("El prodcuto con id: "+id+" no existe."));
+    public ProductoDTO obtenerPorId(Long id) {
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "El producto con id: " + id + " no existe."
+                ));
+
+        return ProductoMapper.toDTO(producto);
     }
 
     // Crear un nuevo producto
     @Override
-    public Producto guardarProducto(Producto producto) {
-        return productoRepository.save(producto);
+    public ProductoDTO guardarProducto(ProductoDTO productoDTO) {
+        Producto producto = ProductoMapper.toEntity(productoDTO);
+        Producto guardado = productoRepository.save(producto);
+        return ProductoMapper.toDTO(guardado);
     }
 
 
     //Actualziar producto
     @Override
-    public Producto actualizarProducto(Long id, Producto productoActualizado) {
+    public ProductoDTO actualizarProducto(Long id, ProductoDTO productoDTOUpdate) {
         Producto productoExis = productoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(
                 "El producto con id: "+id+" no existe."
         ));
@@ -49,24 +60,24 @@ public class ProductoService implements IProductoService{
         }
 
         //Actualizar solo los campos que vienen con valor
-        if (productoActualizado.getNombre() != null){
-            productoExis.setNombre(productoActualizado.getNombre());
+        if (productoDTOUpdate.getNombre() != null){
+            productoExis.setNombre(productoDTOUpdate.getNombre());
         }
-        if (productoActualizado.getDescripcion() != null){
-            productoExis.setDescripcion(productoActualizado.getDescripcion());
+        if (productoDTOUpdate.getDescripcion() != null){
+            productoExis.setDescripcion(productoDTOUpdate.getDescripcion());
         }
-        if (productoActualizado.getPrecio() != null){
-            productoExis.setPrecio(productoActualizado.getPrecio());
+        if (productoDTOUpdate.getPrecio() != null){
+            productoExis.setPrecio(productoDTOUpdate.getPrecio());
         }
-        if (productoActualizado.getStock() != null){
-            productoExis.setStock(productoActualizado.getStock());
+        if (productoDTOUpdate.getStock() != null){
+            productoExis.setStock(productoDTOUpdate.getStock());
         }
-        if (productoActualizado.getCategoria() != null){
-            productoExis.setCategoria(productoActualizado.getCategoria());
+        if (productoDTOUpdate.getCategoria() != null){
+            productoExis.setCategoria(productoDTOUpdate.getCategoria());
         }
 
         //Guardar y retornar
-        return productoRepository.save(productoExis);
+        return ProductoMapper.toDTO(productoRepository.save(productoExis));
 
     }
 

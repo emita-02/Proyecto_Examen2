@@ -1,21 +1,21 @@
 package com.empresa.producto.service;
 
-import com.empresa.producto.model.Producto;
+import com.empresa.producto.dto.ProductoDTO;
 
 import java.util.List;
 
 public interface IProductoService {
     //Metodo para traer todos los productos
-    public List<Producto> listarTodos();
+    public List<ProductoDTO> listarTodos();
 
     //Metodo para obtener producto por Id
-    public Producto obtenerPorId(Long id);
+    public ProductoDTO obtenerPorId(Long id);
 
     //Metodo para guardar productos
-    public Producto guardarProducto(Producto producto);
+    public ProductoDTO guardarProducto(ProductoDTO productoDTO);
 
     //Metodo para actualizar producto
-    public Producto actualizarProducto(Long id, Producto productoActualizado);
+    public ProductoDTO actualizarProducto(Long id, ProductoDTO productoDTOUpdate);
 
     //Metodo para eliminar producto
     public void eliminarPrducto(Long id);
