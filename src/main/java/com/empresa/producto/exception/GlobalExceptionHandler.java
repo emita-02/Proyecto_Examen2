@@ -36,4 +36,25 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errores, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
+    public ResponseEntity<Map<String, Object>> manejarConstraintViolation(
+            jakarta.validation.ConstraintViolationException ex) {
+
+        Map<String, String> errores = new HashMap<>();
+
+        ex.getConstraintViolations().forEach(violation -> {
+            String campo = violation.getPropertyPath().toString();
+            errores.put(campo, violation.getMessage());
+        });
+
+        Map<String, Object> respuesta = new HashMap<>();
+        respuesta.put("timestamp", LocalDateTime.now());
+        respuesta.put("status", HttpStatus.BAD_REQUEST.value());
+        respuesta.put("error", "Datos inválidos");
+        respuesta.put("message", errores);
+
+        return new ResponseEntity<>(respuesta, HttpStatus.BAD_REQUEST);
+    }
+
+
 }
